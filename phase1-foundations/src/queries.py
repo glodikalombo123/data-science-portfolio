@@ -1,6 +1,5 @@
 import sqlite3
 
-
 def execute_and_display(cursor: sqlite3.Cursor, query: str, title: str) -> None:
     """
     Execute une requête SQL et affiche les resultats avec un titre.
@@ -45,6 +44,24 @@ def main() -> None:
         cursor,
         "SELECT * FROM employees WHERE hire_year > 2020",
         "Liste des employés embauchés après 2020 :"
+    )
+
+    execute_and_display(
+        cursor,
+        "SELECT department, AVG(salary) FROM employees GROUP BY department",
+        "Le salaire moyen par departement"
+    )
+
+    execute_and_display(
+        cursor,
+        "SELECT department, COUNT(id) FROM employees GROUP BY department",
+        "Liste d'employés par departement"
+    )
+
+    execute_and_display(
+        cursor,
+        "SELECT employees.name, departments.budget FROM employees INNER JOIN departments ON employees.department = departments.name;",
+        "Le nom de chaque employé avec le budget de son departement"
     )
 
     conn.close()
