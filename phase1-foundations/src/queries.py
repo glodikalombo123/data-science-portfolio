@@ -64,8 +64,60 @@ def main() -> None:
         "Le nom de chaque employé avec le budget de son departement"
     )
 
+    execute_and_display(
+        cursor,
+        "SELECT name, department, salary, AVG(salary) OVER (PARTITION BY department) AS avg_dept_salary FROM employees",
+        "Affichage du salaire de chaque employé et calcule de la moyenne du departement sans fusion des lignes"
+    )
+
+    execute_and_display(
+        cursor,
+        "SELECT name, department, salary, RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rank_in_dept FROM employees",
+        "Classement des employés par salaire à l'intérieur des departements respetifs"
+    )
+
+
+    execute_and_display(
+        cursor,
+        "WITH department_averages AS (SELECT department, AVG(salary) AS avg_salary FROM employees GROUP BY department) SELECT * FROM department_averages WHERE avg_salary > 70000",
+        "Les departements dont le salaires moyens depassent 70000"
+    )
+
+    execute_and_display(
+        cursor,
+        "SELECT name, hire_year, salary, MAX(salary) OVER (PARTITION BY hire_year) AS max_salary_year FROM employees",
+        "Les details des employés"
+    )
+
+    execute_and_display(
+        cursor,
+        "SELECT name, department, hire_year, RANK() OVER(ORDER BY hire_year) AS seniority_rank FROM employees",
+        "Ranking des employés"
+    )
+
+    execute_and_display(
+        cursor,
+        """WITH dept_stats AS (
+            SELECT
+                e.department,
+                COUNT(e.id) AS employee_count,
+                d.budget,
+                d.budget / COUNT(e.id) AS budget_per_employee
+            FROM employees e
+            INNER JOIN departments d ON e.department = d.name
+            GROUP BY e.department
+        )
+        SELECT *
+        FROM dept_stats
+        WHERE budget_per_employee > 100000""",
+        "Le nombre d'employé et le budget par employé depassant 100000 :"
+    )
+
     conn.close()
 
 
 if __name__ == "__main__":
     main()
+
+
+
