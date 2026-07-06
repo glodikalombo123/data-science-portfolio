@@ -16,7 +16,7 @@ def execute_and_display(cursor: sqlite3.Cursor, query: str, title: str) -> None:
         print(ligne)
     print()
 
-def main() -> None:
+def run_analysis() -> None:
     """ Execution des reqêtes d'analyse sur la table 'events' de appmetris.db """
     conn = sqlite3.connect("phase1-foundations/data/processed/appmetrics.db")
     cursor = conn.cursor()
@@ -90,4 +90,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    run_analysis()
